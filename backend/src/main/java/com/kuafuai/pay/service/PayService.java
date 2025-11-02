@@ -30,11 +30,12 @@ public interface PayService<T extends PaymentOrderDetail> {
 
     /**
      * 获取支付参数
+     *
      * @param paymentOrderId
      * @param extraParams
      * @return
      */
-    Object getPaymentParam(String paymentOrderId, Map<String,Object> extraParams);
+    Object getPaymentParam(String paymentOrderId, Map<String, Object> extraParams);
 
 
     // 获取支付id
@@ -64,7 +65,7 @@ public interface PayService<T extends PaymentOrderDetail> {
      * @param reason         退款原因
      * @return 退款订单ID
      */
-    String applyRefund(String refundOrderNo,String paymentOrderId, BigDecimal refundAmount, String reason, BigDecimal totalAmount);
+    String applyRefund(String refundOrderNo, String paymentOrderId, BigDecimal refundAmount, String reason, BigDecimal totalAmount);
 
     /**
      * 查询退款状态
@@ -91,24 +92,25 @@ public interface PayService<T extends PaymentOrderDetail> {
      * @param paymentOrderId 支付订单ID
      * @return 是否关闭成功
      */
-    boolean closePaymentOrder(String paymentOrderId,String orderNo);
+    boolean closePaymentOrder(String paymentOrderId, String orderNo);
 
     /**
      * 获取支付订单详情
      *
-     * @param paymentOrderId 支付订单ID
      * @return 支付订单详情
      */
     T getPaymentOrderDetail(String orderNo);
 
     /**
      * 支付回调成功的返回结果
+     *
      * @return
      */
     Object payCallbackProcessSuccess();
 
     /**
      * 支付回调失败的返回结果
+     *
      * @return
      */
     Object payCallbackProcessFail();
@@ -121,7 +123,6 @@ public interface PayService<T extends PaymentOrderDetail> {
      */
 
     PayCallbackRequest callbackDecryption(Object requestData, Map<String, String> headers, String database);
-
 
 
 }
