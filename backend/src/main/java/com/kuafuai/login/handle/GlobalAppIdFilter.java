@@ -31,7 +31,8 @@ public class GlobalAppIdFilter extends OncePerRequestFilter {
             "/login/redirect/**",
             "/generalOrder/callback/**",
             "/error/report/**",
-            "/mcp/**"
+            "/mcp/**",
+            "/oauth2/callback/**"
     };
 
     @Override
@@ -53,14 +54,14 @@ public class GlobalAppIdFilter extends OncePerRequestFilter {
         if (StringUtils.isEmpty(appId) && StringUtils.isNotEmpty(apiKey)) {
             APIKey key = getAPIKey(apiKey);
             if (Objects.isNull(key)) {
-                writeUnauthorizedResponse(httpServletResponse, StringUtils.format("无权访问 {} KEY:{}", requestUri ,apiKey));
+                writeUnauthorizedResponse(httpServletResponse, "error.code.no_auth");
                 return;
             }
             appId = key.getAppId();
         }
 
         if (StringUtils.isEmpty(appId)) {
-            writeUnauthorizedResponse(httpServletResponse, StringUtils.format("请求参数异常: {}", requestUri));
+            writeUnauthorizedResponse(httpServletResponse, "error.code.params_error");
             return;
         }
 
@@ -90,6 +91,7 @@ public class GlobalAppIdFilter extends OncePerRequestFilter {
 
     private void writeUnauthorizedResponse(HttpServletResponse response, String msg) throws IOException {
         int code = HttpStatus.UNAUTHORIZED;
+        msg = I18nUtils.getOrDefault(msg, msg);
         String body = JSON.toJSONString(ResultUtils.error(code, msg));
         ServletUtils.renderString(response, body);
     }
@@ -108,7 +110,7 @@ public class GlobalAppIdFilter extends OncePerRequestFilter {
         return appTypeHolder.get();
     }
 
-    private  APIKey getAPIKey(String key) {
+    private APIKey getAPIKey(String key) {
 
         ApplicationAPIKeysService applicationAPIKeysService = SpringUtils.getBean(ApplicationAPIKeysService.class);
         LambdaQueryWrapper<APIKey> queryWrapper = new LambdaQueryWrapper<>();
@@ -118,5 +120,9 @@ public class GlobalAppIdFilter extends OncePerRequestFilter {
         queryWrapper.gt(APIKey::getExpireAt, DateUtils.getTime());
 
         return applicationAPIKeysService.getOne(queryWrapper);
+    }
+
+    public static void setAppId(String appId) {
+        appIdHolder.set(appId);
     }
 }

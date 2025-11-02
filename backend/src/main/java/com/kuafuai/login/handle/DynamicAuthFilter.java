@@ -5,10 +5,7 @@ import com.google.gson.reflect.TypeToken;
 import com.kuafuai.common.constant.HttpStatus;
 import com.kuafuai.common.domin.ResultUtils;
 import com.kuafuai.common.login.LoginUser;
-import com.kuafuai.common.util.JSON;
-import com.kuafuai.common.util.ServletUtils;
-import com.kuafuai.common.util.SpringUtils;
-import com.kuafuai.common.util.StringUtils;
+import com.kuafuai.common.util.*;
 import com.kuafuai.login.service.TokenService;
 import com.kuafuai.system.entity.AppInfo;
 import com.kuafuai.system.service.AppInfoService;
@@ -35,6 +32,7 @@ public class DynamicAuthFilter extends OncePerRequestFilter {
     //白名单直接放行
     private static final String[] WHITE_URLS = {
             "/login/**",
+            "/oauth2/**",
             "/common/**",
             "/get_mp_url",
             "/generalOrder/callback/**",
@@ -44,6 +42,7 @@ public class DynamicAuthFilter extends OncePerRequestFilter {
 
     public static final String[] NON_VERIFIED_URLS = {
             "/profile/**",
+            "/oauth2/callback/**",
             "/login/redirect/**",
             "/generalOrder/callback/**",
             "/error/report/**",
@@ -69,7 +68,7 @@ public class DynamicAuthFilter extends OncePerRequestFilter {
         AppInfo appInfo = getAppInfoByAppId(appId);
 
         if (appInfo == null) {
-            unauthorizedResponse(response, "APP_ID 数据不存在: " + appId);
+            unauthorizedResponse(response, "error.code.not_found");
             return;
         }
 
@@ -91,7 +90,7 @@ public class DynamicAuthFilter extends OncePerRequestFilter {
             // 需要登录,验证登录信息是否存在
             LoginUser loginUser = getLoginUser(request);
             if (loginUser == null) {
-                unauthorizedResponse(response, String.format("请求访问：%s，登录认证失败，无法访问系统资源", requestUri));
+                unauthorizedResponse(response, "error.code.not_login");
                 return;
             }
         }
@@ -111,6 +110,7 @@ public class DynamicAuthFilter extends OncePerRequestFilter {
 
     private void unauthorizedResponse(HttpServletResponse response, String message) throws IOException {
         int code = HttpStatus.UNAUTHORIZED;
+        message = I18nUtils.getOrDefault(message, message);
         ServletUtils.renderString(response, JSON.toJSONString(ResultUtils.error(code, message)));
     }
 

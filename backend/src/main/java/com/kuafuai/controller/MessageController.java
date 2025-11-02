@@ -30,13 +30,13 @@ public class MessageController {
     @PostMapping("/common/mail/send")
     public BaseResponse mailSend(@RequestBody Map<String, Object> data) {
         if (!data.containsKey("title")) {
-            return ResultUtils.error("title参数不存在，请检查参数！");
+            return ResultUtils.error("login.register.params", "title");
         }
         if (!data.containsKey("content")) {
-            return ResultUtils.error("content参数不存在，请检查参数！");
+            return ResultUtils.error("login.register.params", "content");
         }
         if (!data.containsKey("mail")) {
-            return ResultUtils.error("mail参数不存在，请检查参数！");
+            return ResultUtils.error("login.register.params", "mail");
         }
 
         String title = Objects.toString(data.get("title"), "");
@@ -56,7 +56,7 @@ public class MessageController {
         MailDefinition definition = createMailDefinition(GlobalAppIdFilter.getAppId(), content);
 
         client.send(definition, mail, title, params);
-        return ResultUtils.success("邮件发送成功");
+        return ResultUtils.success();
     }
 
     private MailDefinition createMailDefinition(String appId, String content) {

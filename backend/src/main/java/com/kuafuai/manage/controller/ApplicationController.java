@@ -53,7 +53,7 @@ public class ApplicationController {
     public BaseResponse create(@RequestBody AppVo appVo) {
 
         if (StringUtils.isEmpty(appVo.getName())) {
-            throw new BusinessException("应用名称不能为空");
+            throw new BusinessException("error.param.required", "name");
         }
         AppInfo appInfo = manageBusinessService.createApp(appVo);
         return ResultUtils.success(appInfo);
@@ -66,11 +66,11 @@ public class ApplicationController {
     public BaseResponse delete(@PathVariable(value = "id") String appId) {
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (appInfo == null) {
-            throw new BusinessException("请检查删除的应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权删除此应用");
+            throw new BusinessException("error.code.no_auth");
         }
         manageBusinessService.deleteApp(appId);
         return ResultUtils.success();
@@ -84,7 +84,7 @@ public class ApplicationController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (appInfo == null) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         // 获取应用下表数据
@@ -113,15 +113,15 @@ public class ApplicationController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (Objects.isNull(appInfo)) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作");
+            throw new BusinessException("error.code.no_auth");
         }
 
         if (StringUtils.isEmpty(appVo.getAppName())) {
-            throw new BusinessException("应用名称不能为空");
+            throw new BusinessException("error.param.required", "appName");
         }
         appInfo.setAppName(appVo.getAppName());
         appInfo.setNeedAuth(appVo.getNeedAuth());

@@ -31,7 +31,7 @@ public class ContextFactory {
     private static void checkDatabaseAndTable(String database, String table) {
         DynamicInfoCache cache = SpringUtils.getBean(DynamicInfoCache.class);
         if (cache.getAppTableInfo(database, table) == null) {
-            throw new BusinessException(database + ":" + table + ":数据不存在====>表不存在");
+            throw new BusinessException("dynamic.table.not_found", table);
         }
     }
 

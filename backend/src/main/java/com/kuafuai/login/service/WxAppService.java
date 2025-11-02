@@ -36,7 +36,7 @@ public class WxAppService {
                 .grantType("authorization_code")
                 .build());
         if (response.getErrcode() != null && response.getErrcode() > 0) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "小程序验证失败");
+            throw new BusinessException("login.login.wechat.app.code");
         }
         return response.getOpenId();
     }
@@ -61,7 +61,7 @@ public class WxAppService {
 
         WxAppAccessTokenResponse response = wxAppClient.getAccessToken(request);
         if (response.getErrcode() != null && response.getErrcode() != 0) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "token获取失败");
+            throw new BusinessException("login.login.wechat.app.token");
         }
 
         accessToken = response.getAccessToken();
@@ -90,7 +90,7 @@ public class WxAppService {
         WxAppPhoneNumberResponse response = wxAppClient.getPhoneNumber(request);
 
         if (response.getErrcode() != null && response.getErrcode() != 0) {
-            throw new BusinessException(ErrorCode.OPERATION_ERROR, "手机号获取失败");
+            throw new BusinessException("login.login.wechat.app.phone");
         }
 
         return response.getPhoneInfo().getPhoneNumber();

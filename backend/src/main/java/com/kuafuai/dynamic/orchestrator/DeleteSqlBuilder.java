@@ -15,7 +15,7 @@ public class DeleteSqlBuilder {
     public String build() {
         String where = new WhereBuilder(ctx, false).build();
         if (where.isEmpty()) {
-            throw new BusinessException(ctx.getDatabase() + ":" + ctx.getTable() + ":删除条件为空");
+            throw new BusinessException("dynamic.delete.where");
         }
 
         return new DeleteClauseBuilder(ctx).buildBase() + " WHERE " + where;

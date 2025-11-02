@@ -26,6 +26,11 @@ public class OrderCreatRequest {
 
     private String productSubject;
 
+    /**
+     * stripe 的回调地址
+     */
+    private String currentUrl;
+
 
 
 

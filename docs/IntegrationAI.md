@@ -20,22 +20,22 @@
   }
 }
 ```
-<img width="700" height="406" alt="image" src="https://github.com/user-attachments/assets/9dc59ac8-ccdf-44ca-a1fd-ba7fee46a03b" />
+<img width="700" height="406" alt="image" src="images/ai-integration-1.png" />
 
 
 ## 配置后如下图所示：
 
-<img width="700" height="406" alt="image" src="https://github.com/user-attachments/assets/ee8b2d0c-b074-4ddb-8019-bd2be3ffb08e" />
+<img width="700" height="406" alt="image" src="images/ai-integration-2.png" />
 
 ## 成功加载 MCP TOOL & MCP PROMPT
 
-<img width="700" height="406" alt="image" src="https://github.com/user-attachments/assets/b5d57f4c-309f-4aed-9546-946520460707" />
+<img width="700" height="406" alt="image" src="images/ai-integration-3.png" />
 
 ## 加载提示词（Cursor 支持动态加载提示词，其他IDE 如 Trae 请参考文末指南）
 
   ### 首先点击在 cursor 右上角点击 Toggle AI Pane 打开智能体对话框，在对话框内输入 / 即可唤醒并选择 aipexbase 内置软件研发提示词
   
-<img width="700" height="406" alt="image" src="https://github.com/user-attachments/assets/06911d35-17f3-42d4-b3ba-fd4b23f8d796" />
+<img width="700" height="406" alt="image" src="images/ai-integration-4.png" />
 
 
   ### 开始与 ai 对话 清晰的描述你的需求，并持续关注代码调整，与 ai 持续对话完善项目，最终完成前端项目的开发，后端全部交给 aipexbase.js + aipexbase
@@ -53,18 +53,18 @@
 
 
 ## 开始启动开发，cursor 会根据上下文整理开发任务
-<img width="700" height="406" alt="image" src="https://github.com/user-attachments/assets/ef5a4a12-e474-43d5-a6ce-eb48d13d9c33" />
+<img width="700" height="406" alt="image" src="images/ai-integration-5.png" />
 
 
 ## 在 mcp server token所对应的 aipexbase 应用中自动创建数据库表
-<img width="700" height="406" alt="image" src="https://github.com/user-attachments/assets/98bb3fcf-af53-42f8-bb51-57ea793d1472" />
+<img width="700" height="406" alt="image" src="images/ai-integration-6.png" />
 
 ## 管理端可查看表的创建情况
-<img width="3324" height="1982" alt="image" src="https://github.com/user-attachments/assets/dde22ba8-5063-4a4d-8b27-c9adf43549b4" />
+<img width="700" height="406" alt="image" src="images/ai-integration-7.png" />
 
 
 ## 项目请持续与AI对话和修改进一步完善功能
-<img width="700" height="406" alt="image" src="https://github.com/user-attachments/assets/1b0712f4-0345-49f7-9d6e-1007de79753e" />
+<img width="700" height="406" alt="image" src="images/ai-integration-8.png" />
 
 ## Trae 中集成 Aipexbase
 点击链接安装 aipexbase 智能体 https://s.trae.com.cn/a/cfa8bb

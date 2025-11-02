@@ -5,7 +5,10 @@ import {ElMessage, ElMessageBox} from 'element-plus';
 const service = axios.create({
     baseURL: import.meta.env.VITE_APP_BASE_API,
     timeout: 500000, // 请求超时时间：50s
-    headers: {'Content-Type': 'application/json;charset=utf-8'},
+    headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+        'Accept-Language': import.meta.env.VITE_APP_LANG
+    },
 });
 
 const useLogin = import.meta.env.VITE_USE_LOGIN === 'true'

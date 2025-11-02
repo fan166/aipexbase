@@ -95,7 +95,7 @@ public class LoginController {
     public BaseResponse getCurrentUser() {
         final Object currentUser = loginBusinessService.getCurrentUser();
         if (currentUser instanceof Boolean) {
-            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR, "用户未登录");
+            return ResultUtils.error(ErrorCode.NOT_LOGIN_ERROR);
         } else {
             return ResultUtils.success(currentUser);
         }
@@ -106,13 +106,8 @@ public class LoginController {
     @ApiOperation("获取小程序openid")
     public BaseResponse getOpenId(@Validated @RequestParam @NotBlank(message = "code不能为空") String code) {
         //1.根据code换取openid
-        try {
-            String openid = wxAppService.getOpenId(code);
-            return ResultUtils.success(openid);
-        } catch (Exception e) {
-
-            return ResultUtils.success(null, e.getMessage());
-        }
+        String openid = wxAppService.getOpenId(code);
+        return ResultUtils.success(openid);
     }
 
 

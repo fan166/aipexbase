@@ -70,15 +70,15 @@ public class ApplicationConfigsController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (Objects.isNull(appInfo)) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作");
+            throw new BusinessException("error.code.no_auth");
         }
 
         if (StringUtils.isAnyEmpty(dynamicApiVo.getKeyName(), dynamicApiVo.getUrl(), dynamicApiVo.getDataRaw(), dynamicApiVo.getMethod())) {
-            return ResultUtils.error("请检查参数");
+            return ResultUtils.error("error.code.params_error");
         }
 
         LambdaQueryWrapper<DynamicApiSetting> queryWrapper = new LambdaQueryWrapper<>();
@@ -86,7 +86,7 @@ public class ApplicationConfigsController {
         queryWrapper.eq(DynamicApiSetting::getAppId, appId);
 
         if (Objects.nonNull(dynamicApiSettingService.getOne(queryWrapper))) {
-            return ResultUtils.error("重复 API");
+            return ResultUtils.error("error.data.exist");
         }
 
         DynamicApiSetting json = DynamicApiSetting.builder()
@@ -112,11 +112,11 @@ public class ApplicationConfigsController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (Objects.isNull(appInfo)) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作");
+            throw new BusinessException("error.code.no_auth");
         }
 
         LambdaQueryWrapper<DynamicApiSetting> queryWrapper = new LambdaQueryWrapper<>();
@@ -136,20 +136,20 @@ public class ApplicationConfigsController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (Objects.isNull(appInfo)) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作");
+            throw new BusinessException("error.code.no_auth");
         }
 
         if (StringUtils.isEmpty(apiKeyVo.getName())) {
-            return ResultUtils.error("请检查参数");
+            return ResultUtils.error("error.code.params_error");
         }
 
         if (!StringUtils.isEmpty(apiKeyVo.getExpireAt())) {
             if (apiKeyVo.getExpireAt().compareTo(DateUtils.getTime()) <= 0) {
-                return ResultUtils.error("过期时间不合法");
+                return ResultUtils.error("error.code.params_error");
             }
         }
 
@@ -162,11 +162,11 @@ public class ApplicationConfigsController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (Objects.isNull(appInfo)) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作");
+            throw new BusinessException("error.code.no_auth");
         }
 
         IPage<APIKey> page = new Page<>(pageRequest.getCurrent(), pageRequest.getPageSize());
@@ -183,15 +183,15 @@ public class ApplicationConfigsController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (Objects.isNull(appInfo)) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作");
+            throw new BusinessException("error.code.no_auth");
         }
 
         if (!StringUtils.containsAny(Arrays.asList(APIKey.APIKeyStatus.ACTIVE.name(), APIKey.APIKeyStatus.DISABLE.name()), switchStatusVo.getStatus())) {
-            throw new BusinessException("异常状态切换");
+            throw new BusinessException("error.code.params_error");
         }
 
         LambdaQueryWrapper<APIKey> queryWrapper = new LambdaQueryWrapper<>();
@@ -201,7 +201,7 @@ public class ApplicationConfigsController {
 
         APIKey apiKey = applicationAPIKeysService.getOne(queryWrapper);
         if (Objects.isNull(apiKey)) {
-            throw new BusinessException("请检查 APIKEY 是否存在");
+            throw new BusinessException("error.code.params_error");
         }
 
         if (StringUtils.equals(switchStatusVo.getStatus(), apiKey.getStatus())) {
@@ -217,11 +217,11 @@ public class ApplicationConfigsController {
 
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (Objects.isNull(appInfo)) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
 
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作");
+            throw new BusinessException("error.code.no_auth");
         }
 
         LambdaQueryWrapper<APIKey> queryWrapper = new LambdaQueryWrapper<>();

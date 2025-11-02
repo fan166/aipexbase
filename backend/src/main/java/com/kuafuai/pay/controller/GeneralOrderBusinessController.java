@@ -19,26 +19,17 @@ import java.util.Map;
 @Slf4j
 public class GeneralOrderBusinessController {
 
-
     @Resource
     private OrderFacadeService orderFacadeService;
 
-
-
-
-
     /**
-     * 订单处理的统一入口
-     * @param
-     * @return
+     * 生成唯一支付单id
+     * 创建订单
+     * 轮训支付单状态
      */
     @PostMapping("/{operateName}")
-
-    public BaseResponse<?> handleOrder(@PathVariable String operateName, @RequestBody
-                                       Map<String, Object> body) {
-
-        return orderFacadeService.handleOrder(GlobalAppIdFilter.getAppId(),operateName, body);
-
+    public BaseResponse<?> handleOrder(@PathVariable String operateName, @RequestBody Map<String, Object> body) {
+        return orderFacadeService.handleOrder(GlobalAppIdFilter.getAppId(), operateName, body);
     }
 
     @GetMapping("/payMethod")
@@ -50,6 +41,7 @@ public class GeneralOrderBusinessController {
         final ArrayList<String> strings = Lists.newArrayList();
         final Boolean wxEnable = wxV3PayConfig.getWxEnable();
         final Boolean mockEnable = wxV3PayConfig.getMockEnable();
+        final Boolean stripeEnable = wxV3PayConfig.getStripeEnable();
 
         if (wxEnable) {
             strings.add("wechat");
@@ -57,6 +49,10 @@ public class GeneralOrderBusinessController {
 
         if (mockEnable) {
             strings.add("mock");
+        }
+
+        if (stripeEnable) {
+            strings.add("stripe");
         }
 
         return ResultUtils.success(strings);

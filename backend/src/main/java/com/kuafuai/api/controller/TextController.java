@@ -24,12 +24,12 @@ public class TextController {
     @PostMapping("/text2text")
     public BaseResponse text2text(@RequestBody Map<String, Object> data) {
         if (!data.containsKey("text")) {
-            return ResultUtils.error("text参数不存在，请检查参数！");
+            return ResultUtils.error("login.register.params", "text");
         }
 
         String text = Convert.toStr(data.get("text"));
         if (StringUtils.isEmpty(text)) {
-            return ResultUtils.error("text参数不能为空，请检查参数！");
+            return ResultUtils.error("login.register.params", "text");
         }
 
         String appId = GlobalAppIdFilter.getAppId();
@@ -44,7 +44,7 @@ public class TextController {
     @PostMapping("/tts")
     public BaseResponse tts(@RequestBody Map<String, Object> data) {
         if (!data.containsKey("text")) {
-            return ResultUtils.error("text参数不存在，请检查参数！");
+            return ResultUtils.error("error.code.params_error");
         }
         String appId = GlobalAppIdFilter.getAppId();
         String text = String.valueOf(data.get("text"));

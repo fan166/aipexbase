@@ -39,16 +39,16 @@ public class UserNameProvider implements AuthenticationProvider {
 
         Login current = loginBusinessService.getUserBySelectKey(loginVo.getPhone(), loginVo.getRelevanceTable());
         if (current == null) {
-            throw new UsernameNotFoundException("用户不存在");
+            throw new UsernameNotFoundException("");
         }
 
         String dbPassword = current.getPassword();
         if (StringUtils.isEmpty(dbPassword)) {
-            throw new BadCredentialsException("密码有误");
+            throw new BadCredentialsException("");
         }
 
         if (!SecurityUtils.matchesPassword(passwd, dbPassword)) {
-            throw new BadCredentialsException("密码有误");
+            throw new BadCredentialsException("");
         }
 
         LoginUser loginUser = loginBusinessService.getLoginUser(current, loginVo.getRelevanceTable());
@@ -81,8 +81,6 @@ public class UserNameProvider implements AuthenticationProvider {
                 .eq(Login::getRelevanceTable, CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, relevanceTable));
         loginService.update(appId, updateWrapper);
     }
-
-
 
 
     @Override

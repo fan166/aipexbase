@@ -48,7 +48,7 @@ public class FileExportController {
 
     private String normalizeTableName(String tableName) {
         if (StringUtils.isBlank(tableName)) {
-            throw new BusinessException("表名不能为空");
+            throw new BusinessException("error.param.required", "tableName");
         }
 
         // 特殊表名处理
@@ -83,7 +83,7 @@ public class FileExportController {
 
         AppTableInfo tableInfo = appTableInfoService.getOne(queryWrapper);
         if (ObjectUtils.isEmpty(tableInfo)) {
-            throw new BusinessException("未找到表信息: " + tableName);
+            throw new BusinessException("error.code.not_found");
         }
         return tableInfo;
     }
@@ -113,7 +113,7 @@ public class FileExportController {
             workbook.close();
         } catch (IOException e) {
             log.error("下载模板失败, tableName: {}", tableName, e);
-            throw new BusinessException("下载模板失败");
+            throw new BusinessException("error.code.fail");
         }
     }
 
@@ -145,7 +145,7 @@ public class FileExportController {
         excelProvider.importData(file, columnInfos,
                 data -> dynamicService.addBatch(appId, normalizedTableName, data));
 
-        return ResultUtils.success("导入成功");
+        return ResultUtils.success();
     }
 
     /**
@@ -155,11 +155,11 @@ public class FileExportController {
         BaseResponse response = dynamicService.list(appId, tableName, params);
 
         if (!response.isSuccess()) {
-            throw new BusinessException(response.getMessage());
+            throw new BusinessException("dynamic.list.no_data_export");
         }
 
         if (ObjectUtils.isEmpty(response.getData())) {
-            throw new BusinessException("暂无符合条件的数据，暂不支持导出");
+            throw new BusinessException("dynamic.list.no_data_export");
         }
 
         @SuppressWarnings("unchecked")
@@ -201,8 +201,7 @@ public class FileExportController {
                     .doWrite(dataList);
 
         } catch (IOException e) {
-            log.error("导出Excel失败", e);
-            throw new BusinessException("导出Excel失败");
+            throw new BusinessException("error.code.fail");
         }
     }
 
@@ -270,7 +269,7 @@ public class FileExportController {
         List<AppTableColumnInfo> columnInfos = getColumnInfosByTableId(tableInfo.getId(), appId);
 
         if (ObjectUtils.isEmpty(columnInfos)) {
-            throw new BusinessException("未找到表字段信息");
+            throw new BusinessException("error.code.not_found");
         }
 
         return new TableInfoResult(tableInfo, columnInfos, appId);

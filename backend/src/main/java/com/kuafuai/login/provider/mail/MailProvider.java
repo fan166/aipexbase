@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -32,16 +33,16 @@ public class MailProvider implements AuthenticationProvider {
 
         String cacheCode = loginMailBusinessService.getLoginCode(mail);
         if (StringUtils.isEmpty(cacheCode)) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "验证码不存在或已过期,请重新获取");
+            throw new BusinessException("login.login.code.expired");
         }
 
         if (!StringUtils.endsWithIgnoreCase(cacheCode, code)) {
-            throw new BusinessException(ErrorCode.NOT_FOUND_ERROR, "验证码错误,请重试");
+            throw new BusinessException("login.login.code.error");
         }
 
         Login current = loginBusinessService.getUserBySelectKey(mail, loginVo.getRelevanceTable());
         if (current == null) {
-            throw new BusinessException("用户不存在");
+            throw new UsernameNotFoundException("");
         }
 
         LoginUser loginUser = loginBusinessService.getLoginUser(current, loginVo.getRelevanceTable());

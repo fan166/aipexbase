@@ -22,10 +22,10 @@ public class UpdateClauseBuilder {
         AppTableColumnInfo pk = ctx.getColumns().stream()
                 .filter(AppTableColumnInfo::isPrimary)
                 .findFirst()
-                .orElseThrow(() -> new BusinessException(ctx.getDatabase() + ":" + ctx.getTable() + ":主键未配置"));
+                .orElseThrow(() -> new BusinessException("dynamic.table.not_primary", ctx.getTable()));
 
         if (!cond.containsKey(pk.getColumnName())) {
-            throw new BusinessException(ctx.getDatabase() + ":" + ctx.getTable() + ":更新主键参数没有传递");
+            throw new BusinessException("dynamic.update.params.primary", ctx.getTable());
         }
 
         List<String> sets = new ArrayList<>();

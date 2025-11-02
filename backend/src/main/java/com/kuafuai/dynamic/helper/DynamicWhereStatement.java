@@ -29,6 +29,7 @@ public class DynamicWhereStatement {
             .put("$gt", ">")
             .put("lt", "<")
             .put("$lt", "<")
+            .put("like", "like")
             .build();
 
     private static final Set<String> EXACT_MATCH_TYPES = Sets.newHashSet("keyword", "int", "number", "boolean", "quote");

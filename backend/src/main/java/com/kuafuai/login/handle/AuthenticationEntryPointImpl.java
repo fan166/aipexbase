@@ -3,6 +3,7 @@ package com.kuafuai.login.handle;
 
 import com.kuafuai.common.constant.HttpStatus;
 import com.kuafuai.common.domin.ResultUtils;
+import com.kuafuai.common.util.I18nUtils;
 import com.kuafuai.common.util.JSON;
 import com.kuafuai.common.util.ServletUtils;
 import com.kuafuai.common.util.StringUtils;
@@ -22,7 +23,7 @@ public class AuthenticationEntryPointImpl implements AuthenticationEntryPoint, S
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException e)
             throws IOException {
         int code = HttpStatus.UNAUTHORIZED;
-        String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", request.getRequestURI());
+        String msg = I18nUtils.get("login.auth", request.getRequestURI());
         ServletUtils.renderString(response, JSON.toJSONString(ResultUtils.error(code, msg)));
     }
 }

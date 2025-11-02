@@ -29,7 +29,7 @@ public class PicController {
     @PostMapping("/word2pic")
     public BaseResponse word2Pic(@RequestBody Map<String, Object> data) {
         if (!data.containsKey("text")) {
-            return ResultUtils.error("text参数不存在，请检查参数！");
+            return ResultUtils.error("login.register.params", "text");
         }
         String appId = GlobalAppIdFilter.getAppId();
         String text = String.valueOf(data.get("text"));
@@ -41,7 +41,7 @@ public class PicController {
     @PostMapping("/pic2word")
     public BaseResponse pic2word(@RequestBody Map<String, Object> data) {
         if (!data.containsKey("file")) {
-            return ResultUtils.error("file参数不存在，请检查参数！");
+            return ResultUtils.error("login.register.params", "file");
         }
         String appId = GlobalAppIdFilter.getAppId();
         String file = Objects.toString(data.get("file"), "");
@@ -49,7 +49,7 @@ public class PicController {
             String content = picBusinessService.pic2word(appId, file);
             return ResultUtils.success(content);
         } else {
-            return ResultUtils.error("file 参数为空，请上传file文件");
+            return ResultUtils.error("login.register.params", "file");
         }
     }
 }

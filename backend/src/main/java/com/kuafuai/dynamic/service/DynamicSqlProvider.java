@@ -25,7 +25,7 @@ public class DynamicSqlProvider {
                                                  String table,
                                                  List<Map<String, Object>> conditions) {
         if (ObjectUtils.isEmpty(conditions)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "insert data is null");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "dynamic.insert.not_data");
         }
 
         // 检测database和table
@@ -86,7 +86,7 @@ public class DynamicSqlProvider {
                                                  String table,
                                                  Map<String, Object> conditions) {
         if (ObjectUtils.isEmpty(conditions)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "delete data is null");
+            throw new BusinessException(ErrorCode.PARAMS_ERROR, "dynamic.delete.not_data");
         }
 
         // 检测 database 和 table
@@ -99,7 +99,7 @@ public class DynamicSqlProvider {
                 .findFirst()
                 .get();        // 确认主键字段存在
         if (ObjectUtils.isEmpty(primaryColumn)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "主键字段不存在或未设置为主键");
+            throw new BusinessException("dynamic.table.not_primary", table);
         }
         String primaryKey = primaryColumn.getColumnName();
         // 取出 ids
@@ -136,7 +136,7 @@ public class DynamicSqlProvider {
         DynamicInfoCache dynamicInfoCache = SpringUtils.getBean(DynamicInfoCache.class);
         AppTableInfo tableInfo = dynamicInfoCache.getAppTableInfo(database, table);
         if (tableInfo == null) {
-            throw new BusinessException(database + ":" + table + ":数据不存在，请检查=====>表不存在");
+            throw new BusinessException("dynamic.table.not_found", table);
         }
     }
 
@@ -168,7 +168,7 @@ public class DynamicSqlProvider {
         for (AppTableColumnInfo columnInfo : list) {
             String columnName = columnInfo.getColumnName();
             if (!conditions.containsKey(columnName) || Objects.isNull(conditions.get(columnName))) {
-                throw new BusinessException(columnInfo.getAppId() + ":字段:" + columnName + "的值不能为空");
+                throw new BusinessException("dynamic.table.column.not_data", columnName);
             }
         }
     }

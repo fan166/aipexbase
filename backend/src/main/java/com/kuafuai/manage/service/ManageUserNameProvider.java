@@ -29,17 +29,17 @@ public class ManageUserNameProvider implements AuthenticationProvider {
 
         Users current = manageBusinessService.getByEmail(loginVo.getEmail());
         if (current == null) {
-            throw new UsernameNotFoundException("用户不存在");
+            throw new UsernameNotFoundException("");
         }
 
         if (Objects.isNull(authentication.getCredentials())) {
-            throw new BadCredentialsException("密码有误");
+            throw new BadCredentialsException("");
         }
 
         String passwd = authentication.getCredentials().toString();
 
         if (!SecurityUtils.matchesPassword(passwd, current.getPassword())) {
-            throw new BadCredentialsException("密码有误");
+            throw new BadCredentialsException("");
         }
 
         LoginUser loginUser = new LoginUser(current.getId());

@@ -9,8 +9,6 @@ import com.kuafuai.common.delay_task.DelayTaskScheduler;
 import com.kuafuai.common.domin.ErrorCode;
 import com.kuafuai.common.dynamic_config.ConfigContext;
 import com.kuafuai.common.exception.BusinessException;
-import com.kuafuai.common.login.LoginUser;
-import com.kuafuai.common.util.ServletUtils;
 import com.kuafuai.common.util.SnowflakeIdGenerator;
 import com.kuafuai.common.util.StringUtils;
 import com.kuafuai.common.util.UUID;
@@ -137,10 +135,10 @@ public class GeneralOrderBusinessService {
 
     /**
      * 创建订单
-     *
-     * @param orderCreatRequest
-     * @return
-     */
+     * 1、应用信息
+     * 2、订单信息
+     * 3、人信息
+     **/
     @DistributedLock(prefix = "orderLock:", key = "#orderCreatRequest.opId")
     public Object createPaymentOrder(String database, OrderCreatRequest orderCreatRequest, PayLoginVo payLoginVo) {
 
@@ -155,11 +153,9 @@ public class GeneralOrderBusinessService {
         String remark = orderCreatRequest.getRemark();
         String preKey = "payOp:" + productId + ":" + userId;
 
-        final LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
-        final Long loginUserUserId = loginUser.getUserId();
-//          查询login表信息
-//        final Login byId = loginService.getById(loginUserUserId);
 
+        Map<String, Object> extraParams = new HashMap<>();
+        extraParams.put("orderNo",orderCreatRequest.getOrderNo());
 
         try {
             final Object cacheObject = cache.getCacheObject(preKey);
@@ -168,54 +164,39 @@ public class GeneralOrderBusinessService {
                 throw new BusinessException(ErrorCode.PARAMS_ERROR, "opId is not exist");
             }
 
-
             PayService payService = payFactory.getPayService(database, payChanel);
 
-            //      查询是否该操作订单的id
-
+            //查询是否该操作订单的id
             GeneralOrders gOrders = generalOrdersService.getByOpId(database, opId);
 
-
             if (ObjectUtils.isNotEmpty(gOrders)) {
-
-
-//              判断用户是否支付
-                return payService.getPaymentParam(gOrders.getPaymentOrderId(), null);
+                return payService.getPaymentParam(gOrders.getPaymentOrderId(), extraParams);
             }
 
-
-//      获取订单号，保存订单
-
+            //获取订单号，保存订单
             String orderNo = orderCreatRequest.getOrderNo();
-//          判断该订单号是否存在
 
-            boolean isHaveOrderNo;
-            if (StringUtils.isEmpty(orderCreatRequest.getOrderNo())) {
+            //判断该订单号是否存在
+            if (StringUtils.isEmpty(orderNo)) {
                 orderNo = String.valueOf(snowflakeIdGenerator.nextId());
-                isHaveOrderNo = false;
             } else {
-//              如果该订单号存在，那么直接返回支付参数进行支付，不去创建新的订单
+                //如果该订单号存在，那么直接返回支付参数进行支付，不去创建新的订单
                 final GeneralOrders byOrderNo = generalOrdersService.getByOrderNo(database, orderNo);
                 if (byOrderNo != null) {
                     final PayStatus payStatus = byOrderNo.getPayStatus();
                     if (payStatus == null || payStatus.equals(PayStatus.UNPAID)) {
-//                      应该判断是否已过期
+                        //应该判断是否已过期
                         final boolean b = expireOrder(database, orderNo);
                         if (!b) {
-                            return payService.getPaymentParam(byOrderNo.getPaymentOrderId(),
-                                    null);
+                            return payService.getPaymentParam(byOrderNo.getPaymentOrderId(), extraParams);
                         } else {
                             throw new BusinessException(ErrorCode.PARAMS_ERROR, "订单已过期,请刷新页面后重试");
                         }
-
-
                     } else {
                         throw new BusinessException(ErrorCode.PARAMS_ERROR, "订单已付款,请勿重复支付");
                     }
                 }
-                isHaveOrderNo = true;
             }
-
 
             BigDecimal total;
             if (ObjectUtils.isNotEmpty(totalPrice)) {
@@ -224,19 +205,13 @@ public class GeneralOrderBusinessService {
                 total = priceSingle.multiply(new BigDecimal(quality));
             }
 
-
-            final String paymentOrder = payService.createPaymentOrder(payLoginVo, orderNo, total, productSubject, null, database);
+            Map paymentOrder = payService.createPaymentOrder(payLoginVo, orderNo, total, productSubject, orderCreatRequest, database);
 
             if (StringUtils.isBlank(orderCreatRequest.getTel())) {
-//                throw new BusinessException("联系人手机号不能为空");
                 orderCreatRequest.setTel("unknow");
             }
-//        if (StringUtils.isBlank(orderCreatRequest.getRecipient())) {
-//            throw new BusinessException("收件人姓名不能为空");
-//        }
             if (StringUtils.isBlank(orderCreatRequest.getShippingAddress())) {
                 orderCreatRequest.setShippingAddress("unknow");
-//                throw new BusinessException("收货地址不能为空");
             }
 
             String finalOrderNo = orderNo;
@@ -262,41 +237,34 @@ public class GeneralOrderBusinessService {
                     generalOrders.setTel(orderCreatRequest.getTel());
                     generalOrders.setRecipient(orderCreatRequest.getRecipient());
                     generalOrders.setShippingAddress(orderCreatRequest.getShippingAddress());
-                    generalOrders.setPaymentOrderId(paymentOrder);
+                    String payId = payService.getPayId(paymentOrder);
+
+                    generalOrders.setPaymentOrderId(payId);
                     generalOrders.setTableName(orderCreatRequest.getTableName());
                     generalOrders.setFieldName(orderCreatRequest.getFieldName());
 
                     final boolean save = generalOrdersService.save(database, generalOrders);
 
-//                  更新订单的数据
+                    //更新订单的数据
                     if (!save) {
                         throw new BusinessException(ErrorCode.SYSTEM_ERROR, "init order fail");
                     }
 
-                    if (isHaveOrderNo) {
-                        updatePaymentOrdersIdToBusinessOrder(orderCreatRequest.getTableName(), orderCreatRequest.getFieldName(), finalOrderNo,
-                                String.valueOf(generalOrders.getId()));
-                    }
-
                 } catch (Exception e) {
                     status.setRollbackOnly();
-                    try {
-                        throw e;
-                    } catch (ClassNotFoundException ex) {
-                        throw new RuntimeException(ex);
-                    }
+                    throw e;
                 }
             });
 
-//      设置订单过期逻辑
+            //设置订单过期逻辑
             final OrderConfig orderConfig = OrderConfig.builder().appId(ConfigContext.getDatabase()).build();
             final Integer orderExpireTime = orderConfig.getOrderExpireTime();
-//      不需要判空，如果是空，那么springboot 就无法启动
+            //不需要判空，如果是空，那么springboot 就无法启动
             if (orderExpireTime > 0) {
                 delayTaskScheduler.schedule(GlobalAppIdFilter.getAppId(), new OrderExpireTaskParam(orderNo),
                         orderExpireTime * 60, TimeUnit.SECONDS);
             }
-            return payService.getPaymentParam(paymentOrder, null);
+            return payService.getPaymentParam(payService.getPayId(paymentOrder), paymentOrder);
         } finally {
             cache.deleteObject(preKey);
         }
@@ -480,16 +448,16 @@ public class GeneralOrderBusinessService {
             return false;
         }
 
-//      判断是否超过了订单过期时间
+        //判断是否超过了订单过期时间
 
         final LocalDateTime createTime = byOrderNo.getCreateTime();
         final OrderConfig orderConfig = OrderConfig.builder().appId(ConfigContext.getDatabase()).build();
         if (!LocalDateTime.now().isAfter(createTime.plusMinutes(orderConfig.getOrderExpireTime()))) {
-//          没有过期，等待主动过期
+            // 未过期
             return false;
         }
 
-//      关闭订单
+        //关闭订单
         final String paymentChannel = byOrderNo.getPaymentChannel();
 
         final PayService payService = payFactory.getPayService(database, paymentChannel);
@@ -498,7 +466,7 @@ public class GeneralOrderBusinessService {
         boolean b = payService.closePaymentOrder(byOrderNo.getPaymentOrderId(), byOrderNo.getOrderNo());
 
         if (b) {
-//           关单成功，说明未支付，更新订单的状态是已过期
+            //关单成功，说明未支付，更新订单的状态是已过期
             final LambdaUpdateWrapper<GeneralOrders> updateWrapper = new LambdaUpdateWrapper<>();
             updateWrapper.eq(GeneralOrders::getOrderNo, orderNo)
                     .set(GeneralOrders::getOrderStatus, PayStatus.TIMEOUT)
@@ -622,7 +590,7 @@ public class GeneralOrderBusinessService {
         final PayService payService = payFactory.getPayService(database, payChannel);
 
 
-        return payService.callbackDecryption(requestData, headers);
+        return payService.callbackDecryption(requestData, headers, database);
 
     }
 

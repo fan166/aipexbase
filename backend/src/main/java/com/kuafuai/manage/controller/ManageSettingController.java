@@ -49,6 +49,9 @@ public class ManageSettingController {
         checkAppPermission(appId);
         //1. 先根据 data 的 key 删除数据
         //2. 在根据 data 的 key 保存数据
+        if (data.isEmpty()) {
+            return ResultUtils.success();
+        }
         String table = "system_config";
         boolean existTableNameByAppId = appTableInfoService.existTableNameByAppId(appId, newTableName);
         if (existTableNameByAppId) {
@@ -75,10 +78,10 @@ public class ManageSettingController {
     private void checkAppPermission(String appId) {
         AppInfo appInfo = appInfoService.getAppInfoByAppId(appId);
         if (appInfo == null) {
-            throw new BusinessException("请检查应用是否存在");
+            throw new BusinessException("error.code.not_found");
         }
         if (!Objects.equals(appInfo.getOwner(), SecurityUtils.getUserId())) {
-            throw new BusinessException("无权操作此应用");
+            throw new BusinessException("error.code.no_auth");
         }
     }
 }

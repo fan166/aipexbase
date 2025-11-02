@@ -1,5 +1,7 @@
 package com.kuafuai.common.domin;
 
+import com.kuafuai.common.util.I18nUtils;
+
 /**
  * 返回工具类
  *
@@ -29,14 +31,17 @@ public class ResultUtils {
      * @return
      */
     public static BaseResponse error(ErrorCode errorCode) {
+
         return new BaseResponse<>(errorCode);
     }
 
-    public static BaseResponse error() {
-        return new BaseResponse(-1, null, "system error");
+    public static BaseResponse error(String message) {
+        message = I18nUtils.getOrDefault(message, message);
+        return new BaseResponse(-1, null, message);
     }
 
-    public static BaseResponse error(String message) {
+    public static BaseResponse error(String message, Object... args) {
+        message = I18nUtils.getOrDefault(message, message, args);
         return new BaseResponse(-1, null, message);
     }
 
@@ -58,6 +63,7 @@ public class ResultUtils {
      * @return
      */
     public static BaseResponse error(ErrorCode errorCode, String message) {
+        message = I18nUtils.getOrDefault(message, message);
         return new BaseResponse(errorCode.getCode(), null, message);
     }
 

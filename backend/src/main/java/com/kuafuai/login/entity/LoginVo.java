@@ -1,25 +1,47 @@
 package com.kuafuai.login.entity;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import lombok.Data;
 
+/**
+ * 登录请求实体
+ * 用于封装各种登录方式所需的参数
+ */
 @Data
 public class LoginVo {
-    @Schema(description = "小程序code")
+    
+    /**
+     * 小程序授权码
+     * 用于微信小程序登录
+     */
     private String code;
 
-    @Schema(description = "用户名/手机号")
+    /**
+     * 用户名或手机号
+     * 用于用户名/密码登录或手机号验证码登录
+     */
     private String phone;
 
-    @Schema(description = "密码")
+    /**
+     * 密码
+     * 用于用户名/密码登录
+     */
     private String password;
 
-    @Schema(description = "state")
+    /**
+     * 状态参数
+     * 用于OAuth2登录的安全验证
+     */
     private String state;
 
-    @Schema(description = "关联表")
+    /**
+     * 关联表
+     * 用户数据存储的表名，用于多租户场景
+     */
     private String relevanceTable;
 
+    /**
+     * 微信OpenID
+     * 用于微信相关登录
+     */
     private String openId;
-
 }

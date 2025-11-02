@@ -48,7 +48,7 @@ public class LoginWechatBusinessService {
                     .build());
 
             if (response.getErrcode() != null && response.getErrcode() > 0) {
-                throw new BusinessException(ErrorCode.OPERATION_ERROR.getCode(), "H5验证失败");
+                throw new BusinessException("login.login.wechat.h5.openid");
             }
             return response.getOpenId();
         }

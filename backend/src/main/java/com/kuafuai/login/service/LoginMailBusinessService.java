@@ -62,8 +62,8 @@ public class LoginMailBusinessService {
 
     private MailDefinition createMailDefinition(Map<String, String> configMap) {
         String host = configMap.getOrDefault(CONFIG_MAIL_HOST, "smtp.126.com");
-        String userName = configMap.getOrDefault(CONFIG_MAIL_USER, "kuafuai@126.com");
-        String password = configMap.getOrDefault(CONFIG_MAIL_PASSWD, "HOXVPZDIOXTNYJAX");
+        String userName = configMap.getOrDefault(CONFIG_MAIL_USER, "");
+        String password = configMap.getOrDefault(CONFIG_MAIL_PASSWD, "");
         Integer port = Integer.parseInt(configMap.getOrDefault(CONFIG_MAIL_PORT, "465"));
 
         String mailTemplate = configMap.getOrDefault(CONFIG_MAIL_TEMPLATE, "您的验证码: ${{code}}");

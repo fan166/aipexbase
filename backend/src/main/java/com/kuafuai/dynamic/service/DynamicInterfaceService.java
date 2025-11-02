@@ -12,8 +12,10 @@ import com.google.common.collect.Maps;
 import com.google.gson.reflect.TypeToken;
 import com.kuafuai.common.exception.BusinessException;
 import com.kuafuai.common.text.Convert;
+import com.kuafuai.common.util.JSON;
+import com.kuafuai.common.util.ServletUtils;
+import com.kuafuai.common.util.StringUtils;
 import com.kuafuai.common.util.UUID;
-import com.kuafuai.common.util.*;
 import com.kuafuai.dynamic.mapper.DynamicMapper;
 import com.kuafuai.dynamic.mapper.DynamicStatisticsMapper;
 import com.kuafuai.login.handle.DynamicAuthFilter;
@@ -51,9 +53,6 @@ public class DynamicInterfaceService {
     @Resource
     private DynamicStatisticsMapper dynamicStatisticsMapper;
 
-    @Resource
-    private SnowflakeIdGenerator snowflakeIdGenerator;
-
     private final static String CURRENT = "current";
     private final static String PAGE_SIZE = "pageSize";
     private final static String OFFSET = "offset";
@@ -90,7 +89,7 @@ public class DynamicInterfaceService {
 
         String primaryKey = systemBusinessService.getAppTablePrimaryKey(database, table);
         if (!conditions.containsKey(primaryKey)) {
-            throw new BusinessException("更新时,数据有误");
+            throw new BusinessException("dynamic.update.params.error");
         }
 
         Map<String, Object> resourceMapData = extractResourceColumns(database, table, conditions);
@@ -240,7 +239,7 @@ public class DynamicInterfaceService {
 
         try {
             if (data == null || data.isEmpty()) {
-                throw new BusinessException("没有数据可导出");
+                throw new BusinessException("dynamic.list.no_data_export");
             }
 
             // 1. 动态生成表头
@@ -299,7 +298,7 @@ public class DynamicInterfaceService {
                     .sheet("Sheet1")
                     .doWrite(rows);
         } catch (Exception e) {
-            throw new BusinessException("导出失败: " + e.getMessage());
+            throw new BusinessException("dynamic.list.export.error");
         }
     }
 

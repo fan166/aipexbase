@@ -41,8 +41,10 @@ public class OrderFacadeService {
     public BaseResponse<?> handleOrder(String database, String operateName, Map<String, Object> body) {
         try {
             switch (operateName) {
+                // 使用 product_id + user_id 生成唯一支付单 id
                 case "getUniqueOrderNo":
                     return getUniqueOrderNo(body, database);
+                // 创建支付单
                 case "create":
                     return createOrder(body, database);
                 case "deliver":
@@ -51,6 +53,7 @@ public class OrderFacadeService {
                     return confirmOrder(body, database);
                 case "getPaymentParam":
                     return getPaymentParam(body, database);
+                // 查询支付单状态
                 case "getPayOrderMessage":
                     return getPayOrderMessage(body, database);
                 case "cancelPay":
@@ -90,6 +93,13 @@ public class OrderFacadeService {
             deliverOrderNo = body.get("paymentOrderId");
         }
 
+        if (ObjectUtils.isEmpty(deliverOrderNo)) {
+
+            deliverOrderNo = body.get("orderId");
+        }
+
+
+
 
         return ResultUtils.success(orderBusinessService.getOrder(database, String.valueOf(deliverOrderNo)));
 
@@ -105,8 +115,7 @@ public class OrderFacadeService {
 
     // 创建订单
     private BaseResponse<?> createOrder(Map<String, Object> body, String database) {
-        OrderCreatRequest createRequest = objectMapper.convertValue(body,
-                OrderCreatRequest.class);
+        OrderCreatRequest createRequest = objectMapper.convertValue(body, OrderCreatRequest.class);
 
         final LoginUser loginUser = tokenService.getLoginUser(ServletUtils.getRequest());
 
@@ -190,7 +199,10 @@ public class OrderFacadeService {
      */
     public Object handleOrderCallback(String payChannel, String requestData, Map<String, String> headers, String database) {
         PayCallbackRequest payCallbackRequest = orderBusinessService.decryption(database, payChannel, requestData, headers);
-        log.info("解密后的支付参数{}", payCallbackRequest);
+        log.info("解密后的支付参数{} ,渠道{}", payCallbackRequest, payChannel);
+        if (ObjectUtils.isEmpty(payCallbackRequest)) {
+            return null;
+        }
         return orderBusinessService.paySuccessCallback(database, payCallbackRequest);
 
     }

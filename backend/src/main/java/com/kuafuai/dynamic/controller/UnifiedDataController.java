@@ -45,7 +45,7 @@ public class UnifiedDataController {
         String database = GlobalAppIdFilter.getAppId();
         TriFunction<String, String, Map<String, Object>, Object> function = methodHandlers.get(method.toLowerCase());
         if (function == null) {
-            throw new BusinessException("Unsupported method: " + method);
+            throw new BusinessException("error.data.method.not_found");
         }
 
         return function.apply(database, table, data);

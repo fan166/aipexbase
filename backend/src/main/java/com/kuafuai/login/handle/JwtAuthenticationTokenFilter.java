@@ -5,10 +5,7 @@ import com.kuafuai.common.constant.HttpStatus;
 import com.kuafuai.common.domin.ResultUtils;
 import com.kuafuai.common.login.LoginUser;
 import com.kuafuai.common.login.SecurityUtils;
-import com.kuafuai.common.util.JSON;
-import com.kuafuai.common.util.ServletUtils;
-import com.kuafuai.common.util.SpringUtils;
-import com.kuafuai.common.util.StringUtils;
+import com.kuafuai.common.util.*;
 import com.kuafuai.login.service.TokenService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -32,7 +29,8 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             "/login/redirect/**",
             "/generalOrder/callback/**",
             "/error/report/**",
-            "/mcp/**"
+            "/mcp/**",
+            "/oauth2/**"
     };
 
 
@@ -58,7 +56,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             } else {
                 // 登录失效
                 int code = HttpStatus.UNAUTHORIZED;
-                String msg = StringUtils.format("请求访问：{}，认证失败，无法访问系统资源", request.getRequestURI());
+                String msg = I18nUtils.get("login.auth", request.getRequestURI());
                 ServletUtils.renderString(response, JSON.toJSONString(ResultUtils.error(code, msg)));
                 return;
             }

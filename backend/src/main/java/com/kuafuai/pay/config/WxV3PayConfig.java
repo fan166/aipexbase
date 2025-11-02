@@ -57,6 +57,8 @@ public class WxV3PayConfig {
 //    @Value("${wx.pay.mock_enable:false}")
     private Boolean mockEnable;
 
+    private Boolean stripeEnable;
+
 
 //    @Value("${wx.pay.order_pre_key:000000-}")
     private String orderPreKey;
@@ -97,6 +99,7 @@ public class WxV3PayConfig {
             config.isTestAmount = parseMap.getOrDefault("wx.pay.is_test_amount", "xxxx");
             config.wxEnable = Boolean.parseBoolean(parseMap.getOrDefault("wx.pay.wechat_enable", "false"));
             config.mockEnable = Boolean.parseBoolean(parseMap.getOrDefault("wx.pay.mock_enable", "true"));
+            config.stripeEnable = Boolean.parseBoolean(parseMap.getOrDefault("stripe.pay.enable", "false"));
             config.orderPreKey = parseMap.getOrDefault("wx.pay.order_pre_key", "xxxx");
 
             return config;
@@ -118,6 +121,10 @@ public class WxV3PayConfig {
 
     public Boolean getMockEnable() {
         return mockEnable;
+    }
+
+    public Boolean getStripeEnable() {
+        return stripeEnable;
     }
 
     public void setMockEnable(Boolean mockEnable) {

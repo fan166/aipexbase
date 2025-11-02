@@ -104,7 +104,7 @@ public class LoginBusinessService {
             if (isUserType()) {
                 return false;
             }
-            throw new BusinessException(HttpStatus.UNAUTHORIZED, "获取用户信息异常");
+            throw new BusinessException(HttpStatus.UNAUTHORIZED, "error.code.no_auth");
         }
 
         if (isUserType()) {
@@ -152,6 +152,19 @@ public class LoginBusinessService {
         loginService.save(appId, login);
         return login;
     }
+
+    public Login createNewLoginByOauth2(String oauth2Id, String relevanceTable, String appId) {
+
+        List<AppTableColumnInfo> columnInfoList = dynamicInfoCache.getAppTableColumnInfo(appId, relevanceTable);
+        Map<String, Object> valueMap = createAuthDataMap(columnInfoList);
+
+        Long id = dynamicInterfaceService.add(appId, relevanceTable, valueMap);
+
+        Login login = createLogin(oauth2Id, relevanceTable, id);
+        loginService.save(appId, login);
+        return login;
+    }
+
 
 
     private Login createLogin(String openId, String tableName, Long id) {

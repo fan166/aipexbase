@@ -43,7 +43,6 @@ public class LoginPhoneBusinessService {
     public String sendLoginCode(String appId, String phone) {
         Map<String, String> map = dynamicConfigBusinessService.getSystemConfig(appId);
         String numbers = RandomUtil.randomNumbers(6);
-        System.out.println("numbers = " + numbers);
 
         //配置了host等参数，走发送流程
         if (map.containsKey(CONFIG_SMS_SUPPLIER)) {
@@ -65,9 +64,8 @@ public class LoginPhoneBusinessService {
             smsConfigFactory.getSmsConfig(supplier, smsConfigRequest);
             SEInitializer.initializer().fromConfig(new SmsConfig(), smsConfigFactory.getSupplierConfigList(supplier));
             SmsResponse smsResponse = SmsFactory.getSmsBlend(supplier).sendMessage(phone, numbers);
-            log.info("SMS_RESPONSE：{}", smsResponse);
             if (ObjectUtils.isEmpty(smsResponse) || !smsResponse.isSuccess()) {
-                throw new BusinessException("短信发送失败");
+                throw new BusinessException("login.login.phone.sms");
             }
             cache.setCacheObject(buildCacheKey(phone), numbers, LOGIN_CODE_EXPIRE_MINUTES, TimeUnit.MINUTES);
             return "";

@@ -51,7 +51,7 @@ public class DynamicService {
             // 如果添加的是用户表，判断是否重复记录
             boolean flag = loginBusinessService.checkAuthRecordExist(database, table, conditions);
             if (flag) {
-                return ResultUtils.error("数据已经存在，请检查数据。");
+                return ResultUtils.error("error.data.exist");
             }
         }
         long id = dynamicInterfaceService.add(database, table, conditions);
@@ -66,15 +66,13 @@ public class DynamicService {
                                  String table,
                                  List<Map<String, Object>> conditions) {
         long count = dynamicInterfaceService.addBatch(database, table, conditions);
-//        conditions.put("_system_primary_id", id);
-//        eventService.publishEvent(EventVo.builder().appId(database).model("add").tableName(table).data(conditions).build());
         return ResultUtils.success(count);
     }
 
     @Transactional
     public BaseResponse deleteBatch(String database,
-                                 String table,
-                                 Map<String, Object> conditions) {
+                                    String table,
+                                    Map<String, Object> conditions) {
         long count = dynamicInterfaceService.deleteBatch(database, table, conditions);
         return ResultUtils.success(count);
 
@@ -139,7 +137,7 @@ public class DynamicService {
                             String table,
                             Map<String, Object> conditions) {
         Map<String, Object> data = dynamicInterfaceService.get(database, table, conditions);
-        return data != null ? ResultUtils.success(data) : ResultUtils.error("数据不存在");
+        return ResultUtils.success(data);
     }
 
     /**

@@ -1,7 +1,7 @@
 package com.kuafuai.pay.service;
 
 
-
+import com.kuafuai.pay.business.domain.OrderCreatRequest;
 import com.kuafuai.pay.domain.PayCallbackRequest;
 import com.kuafuai.pay.domain.PayLoginVo;
 import com.kuafuai.pay.domain.PaymentOrderDetail;
@@ -25,10 +25,20 @@ public interface PayService<T extends PaymentOrderDetail> {
      * @param database
      * @return 支付订单ID
      */
-    String createPaymentOrder(PayLoginVo login, String orderId, BigDecimal amount, String subject, Object extraParams, String database);
+    Map<String, Object> createPaymentOrder(PayLoginVo login, String orderId, BigDecimal amount, String subject, OrderCreatRequest extraParams, String database);
 
 
-    Object getPaymentParam(String paymentOrderId, Object extraParams);
+    /**
+     * 获取支付参数
+     * @param paymentOrderId
+     * @param extraParams
+     * @return
+     */
+    Object getPaymentParam(String paymentOrderId, Map<String,Object> extraParams);
+
+
+    // 获取支付id
+    String getPayId(Map<String, Object> param);
 
     /**
      * 查询支付状态
@@ -106,11 +116,13 @@ public interface PayService<T extends PaymentOrderDetail> {
     /**
      * 支付回调数据解密
      *
-     * @param data
      * @param headers
      * @return
      */
 
-    PayCallbackRequest callbackDecryption(Object requestData, Map<String, String> headers);
+    PayCallbackRequest callbackDecryption(Object requestData, Map<String, String> headers, String database);
+
+
+
 }
 

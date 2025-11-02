@@ -4,6 +4,7 @@ import com.kuafuai.common.domin.BaseResponse;
 import com.kuafuai.common.domin.ResultUtils;
 import com.kuafuai.common.exception.BusinessException;
 import com.kuafuai.common.login.LoginUser;
+import com.kuafuai.common.util.I18nUtils;
 import com.kuafuai.common.util.StringUtils;
 import com.kuafuai.login.service.TokenService;
 import com.kuafuai.manage.entity.vo.ManageLoginVo;
@@ -43,12 +44,12 @@ public class ManageLoginController {
     @PostMapping("/register")
     public BaseResponse register(@RequestBody Users users) {
         if (StringUtils.isEmpty(users.getEmail())) {
-            throw new BusinessException("参数有误");
+            throw new BusinessException("login.register.params", "email");
         }
         if (StringUtils.isEmpty(users.getPassword())) {
-            throw new BusinessException("参数有误");
+            throw new BusinessException("login.register.params", "password");
         }
 
-        return manageBusinessService.register(users) ? ResultUtils.success() : ResultUtils.error("邮箱已被使用");
+        return manageBusinessService.register(users) ? ResultUtils.success() : ResultUtils.error("login.register.email");
     }
 }

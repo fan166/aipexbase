@@ -2,6 +2,7 @@ package com.kuafuai.dynamic.controller;
 
 
 import com.google.common.collect.Maps;
+import com.kuafuai.common.exception.BusinessException;
 import com.kuafuai.dynamic.service.DynamicStatisticsService;
 import com.kuafuai.dynamic.service.TriFunction;
 import com.kuafuai.login.handle.GlobalAppIdFilter;
@@ -41,7 +42,7 @@ public class UnifiedStatisticsController {
         String database = GlobalAppIdFilter.getAppId();
         TriFunction<String, String, Map<String, Object>, Object> function = methodHandlers.get(method.toLowerCase());
         if (function == null) {
-            throw new IllegalArgumentException("Unsupported method: " + method);
+            throw new BusinessException("error.data.method.not_found");
         }
         return function.apply(database, table, data);
     }

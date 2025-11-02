@@ -1,5 +1,7 @@
 package com.kuafuai.common.domin;
 
+import com.kuafuai.common.util.I18nUtils;
+
 /**
  * 错误码
  *
@@ -7,16 +9,16 @@ package com.kuafuai.common.domin;
  */
 public enum ErrorCode {
 
-    SUCCESS(0, "ok"),
-    PARAMS_ERROR(40000, "请求参数错误"),
-    NOT_LOGIN_ERROR(40100, "未登录"),
-    NO_AUTH_ERROR(40101, "无权限"),
-    NOT_GET_LOCK(40010, "请求过于频繁"),
-    NOT_FOUND_ERROR(40400, "请求数据不存在"),
-    NOT_BIND_DATA_ERROR(40401, "数据未绑定"),
-    FORBIDDEN_ERROR(40300, "禁止访问"),
-    SYSTEM_ERROR(50000, "系统内部异常"),
-    OPERATION_ERROR(50001, "操作失败");
+    SUCCESS(0, "error.code.success"),
+    PARAMS_ERROR(40000, "error.code.params_error"),
+    NOT_LOGIN_ERROR(40100, "error.code.not_login"),
+    NO_AUTH_ERROR(40101, "error.code.no_auth"),
+    NOT_GET_LOCK(40010, "error.code.not_get_lock"),
+    NOT_FOUND_ERROR(40400, "error.code.not_found"),
+    NOT_BIND_DATA_ERROR(40401, "error.code.not_bind_data"),
+    FORBIDDEN_ERROR(40300, "error.code.forbidden"),
+    SYSTEM_ERROR(50000, "error.code.system_error"),
+    OPERATION_ERROR(50001, "error.code.operation_error");
 
     /**
      * 状态码
@@ -26,19 +28,27 @@ public enum ErrorCode {
     /**
      * 信息
      */
-    private final String message;
+    private final String messageKey;
 
     ErrorCode(int code, String message) {
         this.code = code;
-        this.message = message;
+        this.messageKey = message;
     }
 
     public int getCode() {
         return code;
     }
 
+    public String getMessageKey() {
+        return messageKey;
+    }
+
     public String getMessage() {
-        return message;
+        return I18nUtils.get(this.messageKey);
+    }
+
+    public String getMessage(Object... args) {
+        return I18nUtils.get(this.messageKey, args);
     }
 
 }

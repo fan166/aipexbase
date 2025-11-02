@@ -76,7 +76,7 @@ public class LoginMangerController {
                     "show_name", optional.get()
             ));
         } else {
-            return ResultUtils.error("not find");
+            return ResultUtils.error(ErrorCode.NOT_FOUND_ERROR);
         }
     }
 
@@ -90,7 +90,7 @@ public class LoginMangerController {
             throw new BusinessException(ErrorCode.PARAMS_ERROR);
         }
         if (org.apache.commons.lang3.StringUtils.isEmpty(password)) {
-            throw new BusinessException(ErrorCode.PARAMS_ERROR, "密码不能为空");
+            throw new BusinessException("error.param.required", "password");
         }
 
         final String encryptPassword = SecurityUtils.encryptPassword(password);
