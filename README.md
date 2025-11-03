@@ -23,7 +23,7 @@
 
 
 <p align="center">
-Supported by: <a href="https://www.codeflying.net/"><strong>CodeFlying</strong></a> | Cursor | Trae and other products · Together advancing the new era of AI CODING
+Supported by: <a href="https://www.codeflying.app/"><strong>CodeFlying</strong></a> | Cursor | Trae and other products · Together advancing the new era of AI CODING
 </p> 
 
 <p align="center">
