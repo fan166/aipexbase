@@ -1,12 +1,12 @@
-# aipexbase 发展路线图
+# AIPEXBASE Development Roadmap
 
-> 让我们一起见证 aipexbase 的成长与进化
+> Let's witness the growth and evolution of AIPEXBASE together
 
-## 🎯 愿景目标
-成为 AI 原生开发领域的基础设施与行业标准，让每个开发者都能轻松构建智能应用。
+## 🎯 Vision
+To become the infrastructure and industry standard in AI-native development, enabling every developer to easily build intelligent applications.
 
-### 即将上线
-- [ ] MCP 协议深度集成(Mcp Hub)
-- [ ] Oauth2协议集成
-- [ ] 权限
-- [ ] Api开放市场
+### Coming Soon
+- [ ] Deep MCP Protocol Integration (MCP Hub)
+- [ ] OAuth2 Protocol Integration
+- [ ] Permissions
+- [ ] API Marketplace

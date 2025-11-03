@@ -1,28 +1,30 @@
-# Docker Compose Deployment Guide
+## docker-compose 部署指南
 
-## Prerequisites
-- Linux
-- Docker
-- Docker Compose v2.5 or higher
+### 环境准备
+- linux
+- docker
+- docker-compose v2.5 以上
 
 
-## Configuration
+### 配置修改
 
-##### Edit ./install/docker-compose.yaml
 
-- Modify the log output mount directory for the `backend-new` service (default is acceptable)
-- Modify the MySQL data directory for the `mysql-new` service
-- Configure the port numbers for exposing services as needed
-- Other items can remain as default. Modify as needed.
+##### 编辑 ./install/docker-compose.yaml
 
-## Running
+- 修改 backend-new 服务的日志输出挂载目录，默认即可
+- 修改 mysql-new 服务的 mysql 数据目录
+- 修改 nginx-new 服务的 环境变量中 VITE_APP_SERVICE_API、VITE_PROJECT_API_ENDPOINT 修改为可访问的 ip 或域名
+- 请自行填写可对外暴露使用的端口号暴露服务访问
+- 其他项默认即可，如需修改自行斟酌。
+
+### 运行
 ```bash
-docker-compose up -d
+docker-compose up --build -d
 ```
 
 
-## Notes
-If you are setting up a proxy service externally to forward requests to AIPEXBASE, configure the following proxy settings. Example nginx configuration snippet:
+### 备注
+如果自行在外部搭建代理服务转发请求到 aipexbase 则需要配置如下代理配置，以 nginx 片段配置文件举例
 ```bash
     location / {
         root /usr/share/nginx;
@@ -41,7 +43,7 @@ If you are setting up a proxy service externally to forward requests to AIPEXBAS
        proxy_pass http://1.1.1.1:8080;
        proxy_set_header Host $host;
 
-       # Preserve client real IP
+       # 保留客户端真实 IP
        proxy_set_header X-Real-IP $remote_addr;
        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
        proxy_set_header X-Forwarded-Proto $scheme;
@@ -50,7 +52,7 @@ If you are setting up a proxy service externally to forward requests to AIPEXBAS
        proxy_buffering off;
        proxy_cache off;
 
-       # Maintain long connection
+       # 保持长连接
        proxy_read_timeout 86400s;
        proxy_send_timeout 86400s;
     }

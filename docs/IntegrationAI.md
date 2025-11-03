@@ -1,21 +1,22 @@
-# 在 AI IDE 中原生集成 AIPEXBASE 提供的 Full-Skill Mcp Server 快速完成您的应用开发
+# Native Integration with AIPEXBASE Full-Skill MCP Server in AI IDEs for Rapid Application Development
 
-## 创建应用
-- 第一步进入 aipexbase 后台管理页面创建应用
-- 进入您创建的应用中，点击左侧 API KEYS 进入密钥管理页面
-- 填写信息创建当前应用下 API KEY，并复制保存
+## Creating an Application
+- Step 1: Navigate to the AIPEXBASE admin panel to create an application
+- Enter the application you created and click on **API KEYS** in the left sidebar to access the key management page
+- Fill in the information to create an API KEY for the current application, then copy and save it
 
-## 打开 AI IDE 
-如：Trae 或 Cursor 以下使用 Cursor 举例
-## 在 Cursor 中找到 Cursor Setting 配置 Mcp Servers
+## Open AI IDE
+Examples include: Trae or Cursor (using Cursor as an example below)
+
+## Configure MCP Servers in Cursor Settings
 ```bash
-加入此配置项
-替换域名并粘贴上述步骤中的 apikey 到 token= 后
+Add this configuration item
+Replace the domain and paste the apikey from the above steps after token=
 
 {
   "mcpServers": {
     "aipexbase-mcp-server": {
-      "url": "http://你的域名或IP/mcp/sse?token=coding123"
+      "url": "http://your-domain-or-ip/mcp/sse?token=coding123"
     }
   }
 }
@@ -23,71 +24,54 @@
 <img width="700" height="406" alt="image" src="images/ai-integration-1.png" />
 
 
-## 配置后如下图所示：
+## After configuration, it should look like the following:
 
 <img width="700" height="406" alt="image" src="images/ai-integration-2.png" />
 
-## 成功加载 MCP TOOL & MCP PROMPT
+## Successfully Loaded MCP TOOL & MCP PROMPT
 
 <img width="700" height="406" alt="image" src="images/ai-integration-3.png" />
 
-## 加载提示词（Cursor 支持动态加载提示词，其他IDE 如 Trae 请参考文末指南）
+## Loading Prompts (Cursor supports dynamic prompt loading; for other IDEs like Trae, please refer to the guide at the end)
 
-  ### 首先点击在 cursor 右上角点击 Toggle AI Pane 打开智能体对话框，在对话框内输入 / 即可唤醒并选择 aipexbase 内置软件研发提示词
+  ### First, click **Toggle AI Pane** in the top right corner of Cursor to open the AI dialog. Enter `/` in the dialog to activate and select AIPEXBASE built-in software development prompts
   
 <img width="700" height="406" alt="image" src="images/ai-integration-4.png" />
 
 
-  ### 开始与 ai 对话 清晰的描述你的需求，并持续关注代码调整，与 ai 持续对话完善项目，最终完成前端项目的开发，后端全部交给 aipexbase.js + aipexbase
-  aipexbase.js 是用来与前端集成后调用 aipexbase 后端的 js sdk ，ai 会自动调用 aipexbase.js 进行代码编写，aipexbase.js 用法请参考：https://vvx03gck2p.feishu.cn/docx/LSsLdYZQfoAo3zxTkwrcJuGVnC3  【前端快速集成手册】 
+  ### Start conversing with AI. Clearly describe your requirements and continuously monitor code adjustments. Keep the conversation going with AI to refine the project until the frontend development is complete. The backend is entirely handled by aipexbase.js + AIPEXBASE
+  aipexbase.js is a JavaScript SDK used to integrate with the frontend and call the AIPEXBASE backend. AI will automatically invoke aipexbase.js for code generation. For aipexbase.js usage, please refer to: https://vvx03gck2p.feishu.cn/docx/LSsLdYZQfoAo3zxTkwrcJuGVnC3 [Frontend Quick Integration Guide]
 
 
-示例：
-  - 请使用 vue3+js+vite 构建一个社区图书馆预约管理 web 系统
-  - 要求具备使用邮箱注册及登录功能
-  - 要求首页上方左侧有图书列表、借阅管理、个人信息三个按钮分别对应三个页面
-  - 图书列表应该包含每本图书的书名、作者、出版时间等信息，并且配有一个借书按钮
-  - 点击借书按钮时，需要判断当前图书的借阅状态，如果未被借走，则可以成功借出，并且在借阅管理可以查看自己当前借阅的书籍
-  - 在借阅管理页面可以针对每条借阅记录点击归还
-  - 在我的信息页面可以维护个人信息
+Example:
+  - Build a community library reservation management web system using Vue3 + JavaScript + Vite
+  - Require email-based registration and login functionality
+  - The homepage should have three buttons on the top left: Book List, Loan Management, and Personal Information, each corresponding to a separate page
+  - The Book List should include information such as book title, author, publication date, etc., for each book, with a borrow button
+  - When clicking the borrow button, check the current book's loan status. If it's not already borrowed, the loan can be successful, and borrowed books can be viewed in Loan Management
+  - In the Loan Management page, users can click return for each loan record
+  - In the Personal Information page, users can maintain their personal information
 
 
-## 开始启动开发，cursor 会根据上下文整理开发任务
+## Start Development - Cursor will organize development tasks based on context
 <img width="700" height="406" alt="image" src="images/ai-integration-5.png" />
 
 
-## 在 mcp server token所对应的 aipexbase 应用中自动创建数据库表
+## Automatically create database tables in the AIPEXBASE application corresponding to the MCP server token
 <img width="700" height="406" alt="image" src="images/ai-integration-6.png" />
 
-## 管理端可查看表的创建情况
+## View table creation status in the admin panel
 <img width="700" height="406" alt="image" src="images/ai-integration-7.png" />
 
 
-## 项目请持续与AI对话和修改进一步完善功能
+## Continue conversing with AI and making modifications to further refine the project functionality
 <img width="700" height="406" alt="image" src="images/ai-integration-8.png" />
 
-## Trae 中集成 Aipexbase
-点击链接安装 aipexbase 智能体 https://s.trae.com.cn/a/cfa8bb
+## Integrating AIPEXBASE in Trae
+Click the link to install the AIPEXBASE agent: https://s.trae.com.cn/a/cfa8bb
 
 
-## 最后欢迎提交更多 MCP TOOL
+## Finally, We Welcome Contributions of More MCP Tools
 ```bash
 ../backend/src/main/java/com/kuafuai/manage/mcp/tool/
 ```
-
-
-
-
-
-
-
-
-
-
-
-   
-
-
-
-
-
